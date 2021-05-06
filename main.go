@@ -16,7 +16,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	mp, err := validator.DataValidator(strings.NewReader(`[{"title":"yash","body":"I like sabrina carpenter"}]`))
+	mp, err := validator.DataValidator(strings.NewReader(`[{"title":"yash","body":"I like coding"}]`))
 	if err != nil {
 		log.Fatal(err)
 	}
