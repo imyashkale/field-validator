@@ -21,6 +21,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// WORKING ON THIS
 	f := map[int]map[string][]string{}
 	for recordIndex, v := range mp {
 		f[recordIndex] = map[string][]string{}
