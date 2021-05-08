@@ -10,3 +10,6 @@ If any record (object in js) has any field empty( empty is check. i call it `exi
 # V1 
 Now it only support `exist` check which will make sure that. the field is not empty it has some data. ( field != "")
 
+# v2
+You can pass the data to the validator function in main function. And add field in which you want to check for existance ( not empty )
+In v1 there is need to define the data stucture in front. now its flexible
