@@ -1,5 +1,9 @@
 name:
-  - exist
+  - exist: yes # name should not have data
+  - min: 7
 bio:
-  - exist
-
+  - exist: yes # bio should have data
+age:
+  - exist: yes
+  - min: 5
+  - max: 10
