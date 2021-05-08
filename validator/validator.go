@@ -2,65 +2,64 @@ package validator
 
 import (
 	"encoding/json"
-	"github.com/imyashkale/field-validator/models"
 	"github.com/imyashkale/field-validator/yaml"
 	"io"
-	"log"
-	"reflect"
 )
 
-type validatorResult map[int]map[string]map[string]bool
+//DataValidator This performs checks on data.
+func DataValidator(input io.Reader) (map[int]map[string][]string, error) {
 
-func DataValidator(data io.Reader) (validatorResult, error) {
-	mp := validatorResult{}
+	// storing the validators result
+	mp := map[int]map[string][]string{}
 
 	// Decoding yaml configuration to the go's native type
-	ymlConfig, err := yaml.ConfigFileReader("./config.yaml")
+	config, err := yaml.ConfigFileReader("./config.yaml")
 	if err != nil {
 		return mp, err
 	}
+
 	// Decoding data which on check will be happing
-	var posts []models.Post
+	var records []map[string]string
+
 	// Decoding string to json
-	err = json.NewDecoder(data).Decode(&posts)
+	err = json.NewDecoder(input).Decode(&records)
 	if err != nil {
 		return mp, err
 	}
-
-	for idx, item := range posts {
-		v := reflect.ValueOf(item)
-
-		mp[idx] = map[string]map[string]bool{}
-		for index := 0; index < v.NumField(); index++ {
-			currentField := v.Type().Field(index).Name
-			currentValue := v.Field(index).Interface()
-			r := reflect.ValueOf(ymlConfig)
-			chks := reflect.Indirect(r).FieldByName(currentField).Interface().([]string)
-			// if no check found
-			// check for next field
-			if len(chks) == 0 {
-				log.Printf("No checks found for record[%d] Field [%v]", idx, currentField)
-				continue
-			}
-			mp[idx][currentField] = map[string]bool{}
-			for _, chks := range chks {
-
+	// performing checks on each record in records.
+	// in js context : record is element of array
+	// this is the records : [{} ,{} ,{}]
+	for idx, record := range records {
+		mp[idx] = map[string][]string{}
+		for currentField, currentValue := range record {
+			// looking for the checks to perform on this field
+			// in cofig. because it holds all the what to check on what
+			// config got this checks information from the config.yaml
+			checks := config[currentField]
+			mp[idx][currentField] = []string{}
+			for _, chks := range checks {
 				switch chks {
 				case "exist":
-					if currentValue.(string) != "" {
-						mp[idx][currentField][chks] = true
-						break
+					// if its empty then check failed on this
+					// this will be included in the data
+					if currentValue == "" {
+						mp[idx][currentField] = append(mp[idx][currentField], chks)
 					}
-					mp[idx][currentField][chks] = false
-				default:
-					mp[idx][currentField][chks] = false
 				}
 			}
-			// field name
-			// fmt.Printf("Record[%d] : [%d] : Field : %v :	 Value  : %v : Checks : %v 	\n", idx, index, currentField, currentValue, chks)
-
+			// if no checks failed on this field
+			// then why include
+			// only return to caller whats failed
+			if len(mp[idx][currentField]) == 0 {
+				delete(mp[idx], currentField)
+			}
+		}
+		// if no checks failed on any field of record
+		// then why include
+		// only return to caller whats failed
+		if len(mp[idx]) == 0 {
+			delete(mp, idx)
 		}
 	}
-
 	return mp, nil
 }

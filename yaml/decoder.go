@@ -2,28 +2,25 @@ package yaml
 
 import (
 	"fmt"
-	"github.com/imyashkale/field-validator/models"
 	"gopkg.in/yaml.v2"
 	"os"
 )
 
 //ConfigFile Reader Reads config file convert to go's native type's
-func ConfigFileReader(filePath string) (models.PostConfig, error) {
-
-	config := &models.PostConfig{}
+func ConfigFileReader(filePath string) (map[string][]string, error) {
+	// file path is the configuration file which is written in yaml
+	var config map[string][]string
 	// opening config file
 	file, err := os.Open(filePath)
 	if err != nil {
-		return *config, fmt.Errorf("unable to decode %v file ", err)
+		return config, fmt.Errorf("unable to parse config file %v file ", err)
 	}
-	//deffering file close
+
 	defer file.Close()
 
-	d := yaml.NewDecoder(file)
-
-	if err := d.Decode(&config); err != nil {
-		return *config, err
+	if yaml.NewDecoder(file).Decode(&config); err != nil {
+		return config, fmt.Errorf("unable to decode file %v file ", err)
 	}
 
-	return *config, nil
+	return config, nil
 }

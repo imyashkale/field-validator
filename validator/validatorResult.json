@@ -1,17 +1,12 @@
 {
     "1": {
-        "name": {
-            "exist": true,
-            "found": true
-        },
-        "age": {
-            "exist": true,
-            "found": true
-        }
+        "name": [
+            "exist"
+        ]
     },
     "2": {
-        "name": {
-            "exist": true
-        }
+        "name": [
+            "exist"
+        ]
     }
 }
