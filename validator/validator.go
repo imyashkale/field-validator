@@ -3,7 +3,6 @@ package validator
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/imyashkale/field-validator/yaml"
 	"io"
 	"log"
 	"strconv"
@@ -16,7 +15,7 @@ func DataValidator(input io.Reader) (map[int]map[string][]string, error) {
 	mp := map[int]map[string][]string{}
 
 	// Decoding yaml configuration to the go's native type
-	config, err := yaml.ConfigFileReader("./config.yaml")
+	config, err := ConfigFileReader("./config.yaml")
 	if err != nil {
 		return mp, err
 	}

@@ -1,6 +1,6 @@
 name:
-  - exist: yes # name should not have data
-  - min: 7
+  - exist: yes # this field should not empty.
+  - min: 3
 bio:
   - exist: yes # bio should have data
 age:
