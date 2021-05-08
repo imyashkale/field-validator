@@ -113,6 +113,5 @@ func DataValidator(input io.Reader) (map[int]map[string][]string, error) {
 			delete(mp, idx)
 		}
 	}
-	fmt.Println(mp)
 	return mp, nil
 }
