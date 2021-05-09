@@ -10,7 +10,7 @@ import (
 func main() {
 
 	// performs the checks on data and return what is failed
-	f, err := validator.DataValidator(strings.NewReader(
+	f, err := validator.FieldValidator(strings.NewReader(
 		`[
 			{"name": "yash" , "age":9}
 		]`),

@@ -2,14 +2,13 @@ package validator
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"strconv"
 )
 
 //DataValidator This performs checks on data.
-func DataValidator(input io.Reader) (map[int]map[string][]string, error) {
+func FieldValidator(input io.Reader) (map[int]map[string][]string, error) {
 
 	// storing the validators result
 	mp := map[int]map[string][]string{}
@@ -47,6 +46,8 @@ func DataValidator(input io.Reader) (map[int]map[string][]string, error) {
 						// this will be included in the data
 						switch t := currentValue.(type) {
 						case string:
+							// t is string then
+							// check if its empty or not
 							if checkValue == "yes" && t == "" {
 								mp[idx][currentField] = append(mp[idx][currentField], checkKey)
 							}
@@ -62,6 +63,8 @@ func DataValidator(input io.Reader) (map[int]map[string][]string, error) {
 							}
 						}
 					case "min":
+						// checkValue is string
+						// converted to string so it can be used to compare the value
 						currentValueLen, err := strconv.Atoi(checkValue)
 						if err != nil {
 							log.Println(err)
